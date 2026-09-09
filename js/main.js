@@ -321,6 +321,36 @@ function createLiveBackground() {
 
 window.addEventListener('load', createLiveBackground);
 
+// ==================== SCROLL REVEAL ANIMATION ====================
+function initScrollReveal() {
+    var revealElements = document.querySelectorAll('.section-header, .section-title, .section-desc, .capability-card, .move-card, .atelier-card, .exp-card, .testimonial-card, .timeline-item, .faq-item, .stats-row, .contact-form, .experience-logo');
+    
+    revealElements.forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(40px)';
+    });
+    
+    function reveal() {
+        revealElements.forEach(function(el, index) {
+            var rect = el.getBoundingClientRect();
+            var windowHeight = window.innerHeight;
+            
+            if (rect.top < windowHeight - 80) {
+                el.style.transition = 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', reveal);
+    reveal();
+}
+
+window.addEventListener('load', function() {
+    setTimeout(initScrollReveal, 100);
+});
+
 // ==================== INLINE STYLES ====================
 var styleSheet = document.createElement('style');
 styleSheet.textContent = '\n    .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, #C9A227, #8F741F); z-index: 10000; }\n    .navbar.nav-hidden { transform: translateY(-100%); }\n    .navbar.scrolled { padding: 0.5rem 0; box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3); }\n    .faq-answer { overflow: hidden; }\n    .faq-item.active .faq-question i { transform: rotate(45deg); }\n';
