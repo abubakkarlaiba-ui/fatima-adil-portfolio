@@ -192,6 +192,7 @@ body {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 8rem;
     font-weight: 700;
+    font-style: italic;
     line-height: 1;
     letter-spacing: -2px;
     color: var(--text-ivory);
