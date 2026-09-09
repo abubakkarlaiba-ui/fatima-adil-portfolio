@@ -436,15 +436,21 @@ body {
 }
 
 .section-title em {
-    font-style: italic;
+    font-family: 'Great Vibes', cursive;
+    font-style: normal;
+    font-size: 1.1em;
 }
 
 .section-title strong {
-    font-weight: 700;
+    font-family: var(--font-serif);
+    font-weight: 600;
 }
 
 .gold-text {
+    font-family: 'Great Vibes', cursive;
+    font-style: normal;
     color: var(--gold);
+    font-size: 1.1em;
 }
 
 .section-desc {
