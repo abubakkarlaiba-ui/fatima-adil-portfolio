@@ -145,7 +145,13 @@ if (contactForm) {
             document.body.appendChild(toast);
             
             setTimeout(function() {
-                window.open('https://www.instagram.com/direct/new/?username=_f_a_t_i_ma_', '_blank');
+                var link = document.createElement('a');
+                link.href = 'https://www.instagram.com/direct/new/?username=_f_a_t_i_ma_';
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
                 btn.textContent = 'SENT!';
                 btn.style.background = '#28a745';
             }, 800);
@@ -158,7 +164,13 @@ if (contactForm) {
                 contactForm.reset();
             }, 3000);
         }).catch(function() {
-            window.open('https://www.instagram.com/direct/new/?username=_f_a_t_i_ma_', '_blank');
+            var link = document.createElement('a');
+            link.href = 'https://www.instagram.com/direct/new/?username=_f_a_t_i_ma_';
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
             btn.textContent = 'OPENING INSTAGRAM...';
             setTimeout(function() {
                 btn.textContent = 'TRANSMIT BRIEFING';
