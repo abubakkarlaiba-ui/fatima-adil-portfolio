@@ -146,7 +146,7 @@ if (contactForm) {
             
             setTimeout(function() {
                 var link = document.createElement('a');
-                link.href = 'https://www.instagram.com/direct/new/?username=_f_a_t_i_ma_';
+                link.href = 'https://www.instagram.com/direct/new/?username=__f__a__t__i__ma__';
                 link.target = '_blank';
                 link.rel = 'noopener noreferrer';
                 document.body.appendChild(link);
@@ -163,7 +163,7 @@ if (contactForm) {
             }, 3000);
         }).catch(function() {
             var link = document.createElement('a');
-            link.href = 'https://www.instagram.com/direct/new/?username=_f_a_t_i_ma_';
+            link.href = 'https://www.instagram.com/direct/new/?username=__f__a__t__i__ma__';
             link.target = '_blank';
             link.rel = 'noopener noreferrer';
             document.body.appendChild(link);
