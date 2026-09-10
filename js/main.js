@@ -118,11 +118,11 @@ if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        var nameInput = this.querySelector('.inline-input[type="text"]');
-        var emailInput = this.querySelector('.inline-input[type="email"]');
-        var projectInput = this.querySelectorAll('.inline-input[type="text"]')[1];
+        var nameInput = this.querySelector('.form-input[type="text"]');
+        var emailInput = this.querySelector('.form-input[type="email"]');
+        var projectInput = this.querySelectorAll('.form-input')[1];
         var messageInput = this.querySelector('.message-input');
-        var btn = this.querySelector('.submit-btn');
+        var btn = this.querySelector('.submit-btn span');
         
         var name = nameInput ? nameInput.value : '';
         var email = emailInput ? emailInput.value : '';
@@ -136,7 +136,7 @@ if (contactForm) {
         if (message) fullMessage += 'Message: ' + message + '\n';
         
         btn.textContent = 'SENDING...';
-        btn.disabled = true;
+        btn.parentElement.disabled = true;
         
         navigator.clipboard.writeText(fullMessage).then(function() {
             var toast = document.createElement('div');
@@ -153,14 +153,12 @@ if (contactForm) {
                 link.click();
                 document.body.removeChild(link);
                 btn.textContent = 'SENT!';
-                btn.style.background = '#28a745';
             }, 800);
             
             setTimeout(function() {
                 toast.remove();
                 btn.textContent = 'TRANSMIT BRIEFING';
-                btn.style.background = '';
-                btn.disabled = false;
+                btn.parentElement.disabled = false;
                 contactForm.reset();
             }, 3000);
         }).catch(function() {
@@ -174,22 +172,12 @@ if (contactForm) {
             btn.textContent = 'OPENING INSTAGRAM...';
             setTimeout(function() {
                 btn.textContent = 'TRANSMIT BRIEFING';
-                btn.disabled = false;
+                btn.parentElement.disabled = false;
                 contactForm.reset();
             }, 2000);
         });
     });
 }
-
-// ==================== INLINE INPUT FOCUS ====================
-document.querySelectorAll('.inline-input').forEach(function(input) {
-    input.addEventListener('focus', function() {
-        this.style.borderBottomColor = '#C9A227';
-    });
-    input.addEventListener('blur', function() {
-        this.style.borderBottomColor = 'rgba(244, 240, 230, 0.08)';
-    });
-});
 
 // ==================== SCROLL PROGRESS BAR ====================
 function updateProgressBar() {
