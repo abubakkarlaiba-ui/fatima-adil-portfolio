@@ -1073,6 +1073,12 @@ body {
     gap: 1rem;
     font-size: 0.9rem;
     color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.contact-info-item:hover {
+    color: var(--gold);
 }
 
 .contact-info-item i {
