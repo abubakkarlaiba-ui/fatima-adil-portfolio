@@ -428,17 +428,17 @@ body {
 }
 
 .section-title {
-    font-family: 'Dancing Script', cursive;
+    font-family: var(--font-serif);
     font-size: 3.5rem;
-    font-weight: 700;
-    line-height: 1.2;
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.15;
     margin-bottom: 1.5rem;
     color: var(--text-ivory);
 }
 
 .section-title em {
-    font-family: 'Dancing Script', cursive;
-    font-style: normal;
+    font-style: italic;
 }
 
 .section-title strong {
@@ -593,9 +593,9 @@ body {
 }
 
 .move-card h3 {
-    font-family: 'Dancing Script', cursive;
+    font-family: var(--font-serif);
     font-size: 1.4rem;
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 0.8rem;
     color: var(--text-ivory);
 }
