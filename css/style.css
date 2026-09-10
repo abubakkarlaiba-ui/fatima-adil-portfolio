@@ -511,6 +511,7 @@ body {
     font-family: 'Dancing Script', cursive;
     font-size: 1.6rem;
     font-weight: 700;
+    font-style: italic;
     margin-bottom: 1rem;
     color: var(--text-ivory);
 }
