@@ -1,0 +1,24 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abubakkarlaiba-ui/fatima-adil-portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/abubakkarlaiba-ui/fatima-adil-portfolio/issues"
+  },
+  "homepage": "https://github.com/abubakkarlaiba-ui/fatima-adil-portfolio#readme",
+  "dependencies": {
+    "pg": "^8.23.0"
+  }
+}

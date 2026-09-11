@@ -474,13 +474,7 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="js/firebase-config.js"></script>
     <script>
-        firebase.initializeApp(firebaseConfig);
-        var db = firebase.database();
-
         var ADMIN_PASSWORD = 'fatima2026';
 
         function login() {
@@ -504,58 +498,59 @@
         }
 
         function loadMessages() {
-            db.ref('messages').orderByChild('timestamp').on('value', function(snapshot) {
-                var list = document.getElementById('messageList');
-                var messages = [];
-                var todayCount = 0;
-                var today = new Date().toDateString();
+            fetch('/api/messages')
+                .then(function(res) { return res.json(); })
+                .then(function(messages) {
+                    var list = document.getElementById('messageList');
+                    var todayCount = 0;
+                    var today = new Date().toDateString();
 
-                snapshot.forEach(function(child) {
-                    var msg = child.val();
-                    msg.id = child.key;
-                    messages.unshift(msg);
+                    messages.forEach(function(msg) {
+                        if (new Date(msg.created_at).toDateString() === today) {
+                            todayCount++;
+                        }
+                    });
 
-                    if (new Date(msg.timestamp).toDateString() === today) {
-                        todayCount++;
+                    document.getElementById('totalMsg').textContent = messages.length;
+                    document.getElementById('todayMsg').textContent = todayCount;
+                    document.getElementById('msgCount').textContent = messages.length + ' Messages';
+
+                    if (messages.length === 0) {
+                        list.innerHTML = '<div class="no-messages"><i class="fas fa-inbox"></i><p>No messages yet</p></div>';
+                        return;
                     }
+
+                    list.innerHTML = '';
+                    messages.forEach(function(msg) {
+                        var time = new Date(msg.created_at);
+                        var timeStr = time.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' at ' + time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                        var item = document.createElement('div');
+                        item.className = 'message-item';
+                        item.innerHTML =
+                            '<div class="msg-content">' +
+                                '<div class="msg-name"><i class="fas fa-user" style="color:var(--gold);margin-right:0.5rem;font-size:0.8rem;"></i>' + escapeHtml(msg.name || 'Anonymous') + '</div>' +
+                                '<div class="msg-email"><i class="fas fa-envelope" style="margin-right:0.4rem;"></i>' + escapeHtml(msg.email || 'No email') + '</div>' +
+                                (msg.project ? '<div class="msg-project"><strong>Project:</strong> ' + escapeHtml(msg.project) + '</div>' : '') +
+                                (msg.message ? '<div class="msg-text">' + escapeHtml(msg.message) + '</div>' : '') +
+                                '<div class="msg-time"><i class="fas fa-clock" style="margin-right:0.3rem;"></i>' + timeStr + '</div>' +
+                            '</div>' +
+                            '<div class="msg-actions">' +
+                                '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=' + (msg.email || '') + '&subject=Re: Portfolio Inquiry" target="_blank" class="reply-btn"><i class="fas fa-reply"></i> Reply</a>' +
+                                '<button class="delete-btn" onclick="deleteMsg(' + msg.id + ')"><i class="fas fa-trash"></i> Delete</button>' +
+                            '</div>';
+                        list.appendChild(item);
+                    });
+                })
+                .catch(function() {
+                    document.getElementById('messageList').innerHTML = '<div class="no-messages"><i class="fas fa-exclamation-triangle"></i><p>Failed to load messages</p></div>';
                 });
-
-                document.getElementById('totalMsg').textContent = messages.length;
-                document.getElementById('todayMsg').textContent = todayCount;
-                document.getElementById('msgCount').textContent = messages.length + ' Messages';
-
-                if (messages.length === 0) {
-                    list.innerHTML = '<div class="no-messages"><i class="fas fa-inbox"></i><p>No messages yet</p></div>';
-                    return;
-                }
-
-                list.innerHTML = '';
-                messages.forEach(function(msg) {
-                    var time = new Date(msg.timestamp);
-                    var timeStr = time.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' at ' + time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-
-                    var item = document.createElement('div');
-                    item.className = 'message-item';
-                    item.innerHTML =
-                        '<div class="msg-content">' +
-                            '<div class="msg-name"><i class="fas fa-user" style="color:var(--gold);margin-right:0.5rem;font-size:0.8rem;"></i>' + escapeHtml(msg.name || 'Anonymous') + '</div>' +
-                            '<div class="msg-email"><i class="fas fa-envelope" style="margin-right:0.4rem;"></i>' + escapeHtml(msg.email || 'No email') + '</div>' +
-                            (msg.project ? '<div class="msg-project"><strong>Project:</strong> ' + escapeHtml(msg.project) + '</div>' : '') +
-                            (msg.message ? '<div class="msg-text">' + escapeHtml(msg.message) + '</div>' : '') +
-                            '<div class="msg-time"><i class="fas fa-clock" style="margin-right:0.3rem;"></i>' + timeStr + '</div>' +
-                        '</div>' +
-                        '<div class="msg-actions">' +
-                            '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=' + (msg.email || '') + '&subject=Re: Portfolio Inquiry" target="_blank" class="reply-btn"><i class="fas fa-reply"></i> Reply</a>' +
-                            '<button class="delete-btn" onclick="deleteMsg(\'' + msg.id + '\')"><i class="fas fa-trash"></i> Delete</button>' +
-                        '</div>';
-                    list.appendChild(item);
-                });
-            });
         }
 
         function deleteMsg(id) {
             if (confirm('Delete this message?')) {
-                db.ref('messages/' + id).remove();
+                fetch('/api/delete?id=' + id, { method: 'DELETE' })
+                    .then(function() { loadMessages(); });
             }
         }
 
