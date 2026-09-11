@@ -564,24 +564,27 @@
                 var el = document.getElementById('msg-' + id);
                 if (el) {
                     el.style.opacity = '0.5';
-                    el.style.transform = 'translateX(20px)';
                     el.style.transition = 'all 0.3s';
                 }
-                fetch('/api/delete?id=' + id)
-                    .then(function(res) { return res.json(); })
-                    .then(function(data) {
-                        if (data.success) {
-                            if (el) el.remove();
-                            setTimeout(function() { loadMessages(); }, 300);
-                        } else {
-                            alert('Delete failed: ' + (data.error || 'Unknown error'));
-                            if (el) { el.style.opacity = '1'; el.style.transform = 'none'; }
-                        }
-                    })
-                    .catch(function(err) {
-                        if (el) { el.style.opacity = '1'; el.style.transform = 'none'; }
-                        alert('Failed to delete. Try again.');
-                    });
+                fetch('/api/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ deleteId: id })
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        if (el) el.remove();
+                        setTimeout(function() { loadMessages(); }, 300);
+                    } else {
+                        alert('Delete failed: ' + (data.error || 'Unknown error'));
+                        if (el) { el.style.opacity = '1'; }
+                    }
+                })
+                .catch(function(err) {
+                    if (el) { el.style.opacity = '1'; }
+                    alert('Failed to delete. Try again.');
+                });
             }
         }
 

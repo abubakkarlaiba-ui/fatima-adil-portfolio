@@ -22,7 +22,14 @@ module.exports = async (req, res) => {
 
     if (req.method === 'POST') {
         try {
-            const { name, email, project, message } = req.body;
+            const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+            const { name, email, project, message, deleteId } = body;
+
+            if (deleteId) {
+                await pool.query('DELETE FROM messages WHERE id = $1', [parseInt(deleteId)]);
+                return res.status(200).json({ success: true });
+            }
+
             const result = await pool.query(
                 'INSERT INTO messages (name, email, project, message) VALUES ($1, $2, $3, $4) RETURNING *',
                 [name || '', email || '', project || '', message || '']
