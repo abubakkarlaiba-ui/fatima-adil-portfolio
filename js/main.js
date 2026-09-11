@@ -112,7 +112,7 @@ document.querySelectorAll('.faq-question').forEach(function(question) {
     });
 });
 
-// ==================== CONTACT FORM → INSTAGRAM DM ====================
+// ==================== CONTACT FORM → INSTAGRAM DM + FIREBASE ====================
 var contactForm = document.querySelector('.contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
@@ -129,14 +129,24 @@ if (contactForm) {
         var project = projectInput ? projectInput.value : '';
         var message = messageInput ? messageInput.value : '';
         
+        btn.textContent = 'SENDING...';
+        btn.parentElement.disabled = true;
+
+        if (typeof firebase !== 'undefined' && firebase.database) {
+            firebase.database().ref('messages').push({
+                name: name,
+                email: email,
+                project: project,
+                message: message,
+                timestamp: new Date().toISOString()
+            });
+        }
+        
         var fullMessage = 'Hi Fatima! I found you through your portfolio.\n\n';
         if (name) fullMessage += 'Name: ' + name + '\n';
         if (email) fullMessage += 'Email: ' + email + '\n';
         if (project) fullMessage += 'Project: ' + project + '\n';
         if (message) fullMessage += 'Message: ' + message + '\n';
-        
-        btn.textContent = 'SENDING...';
-        btn.parentElement.disabled = true;
         
         navigator.clipboard.writeText(fullMessage).then(function() {
             var toast = document.createElement('div');
