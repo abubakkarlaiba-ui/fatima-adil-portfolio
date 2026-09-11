@@ -112,7 +112,7 @@ document.querySelectorAll('.faq-question').forEach(function(question) {
     });
 });
 
-// ==================== CONTACT FORM → INSTAGRAM DM + DATABASE ====================
+// ==================== CONTACT FORM → DATABASE ====================
 var contactForm = document.querySelector('.contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
@@ -136,30 +136,11 @@ if (contactForm) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: name, email: email, project: project, message: message })
-        }).catch(function() {});
-        
-        var fullMessage = 'Hi Fatima! I found you through your portfolio.\n\n';
-        if (name) fullMessage += 'Name: ' + name + '\n';
-        if (email) fullMessage += 'Email: ' + email + '\n';
-        if (project) fullMessage += 'Project: ' + project + '\n';
-        if (message) fullMessage += 'Message: ' + message + '\n';
-        
-        navigator.clipboard.writeText(fullMessage).then(function() {
+        }).then(function() {
             var toast = document.createElement('div');
             toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111B2E;color:#F4F0E6;border:1px solid rgba(201,162,39,0.4);border-radius:10px;padding:2rem 3rem;z-index:100000;text-align:center;font-family:Inter,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:400px;';
-            toast.innerHTML = '<div style="font-size:2rem;margin-bottom:1rem;">&#10003;</div><div style="font-size:1rem;font-weight:600;color:#F4F0E6;margin-bottom:0.5rem;">Message Sent!</div><div style="font-size:0.85rem;color:#9AA6B8;line-height:1.5;">Opening Instagram DM...<br>Paste your message and send.</div>';
+            toast.innerHTML = '<div style="font-size:2.5rem;margin-bottom:1rem;color:#C9A227;">&#10003;</div><div style="font-size:1.1rem;font-weight:600;color:#F4F0E6;margin-bottom:0.5rem;">Message Sent Successfully!</div><div style="font-size:0.85rem;color:#9AA6B8;line-height:1.5;">Thank you for reaching out.<br>Fatima will get back to you soon.</div>';
             document.body.appendChild(toast);
-            
-            setTimeout(function() {
-                var link = document.createElement('a');
-                link.href = 'https://www.instagram.com/direct/new/?username=__f__a__t__i__ma__';
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                btn.textContent = 'SENT!';
-            }, 800);
             
             setTimeout(function() {
                 toast.remove();
@@ -168,19 +149,9 @@ if (contactForm) {
                 contactForm.reset();
             }, 3000);
         }).catch(function() {
-            var link = document.createElement('a');
-            link.href = 'https://www.instagram.com/direct/new/?username=__f__a__t__i__ma__';
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            btn.textContent = 'OPENING INSTAGRAM...';
-            setTimeout(function() {
-                btn.textContent = 'TRANSMIT BRIEFING';
-                btn.parentElement.disabled = false;
-                contactForm.reset();
-            }, 2000);
+            btn.textContent = 'TRANSMIT BRIEFING';
+            btn.parentElement.disabled = false;
+            alert('Something went wrong. Please try again.');
         });
     });
 }

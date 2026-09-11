@@ -462,7 +462,7 @@
             <div class="messages-section">
                 <div class="messages-header">
                     <span class="messages-title">Incoming Messages</span>
-                    <button class="refresh-btn" onclick="loadMessages()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button class="refresh-btn" id="refreshBtn" onclick="refreshMessages()"><i class="fas fa-sync-alt"></i> Refresh</button>
                 </div>
                 <div class="message-list" id="messageList">
                     <div class="no-messages">
@@ -527,6 +527,7 @@
 
                         var item = document.createElement('div');
                         item.className = 'message-item';
+                        item.id = 'msg-' + msg.id;
                         item.innerHTML =
                             '<div class="msg-content">' +
                                 '<div class="msg-name"><i class="fas fa-user" style="color:var(--gold);margin-right:0.5rem;font-size:0.8rem;"></i>' + escapeHtml(msg.name || 'Anonymous') + '</div>' +
@@ -536,7 +537,7 @@
                                 '<div class="msg-time"><i class="fas fa-clock" style="margin-right:0.3rem;"></i>' + timeStr + '</div>' +
                             '</div>' +
                             '<div class="msg-actions">' +
-                                '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=' + (msg.email || '') + '&subject=Re: Portfolio Inquiry" target="_blank" class="reply-btn"><i class="fas fa-reply"></i> Reply</a>' +
+                                '<a href="mailto:' + (msg.email || '') + '?subject=Re: Portfolio Inquiry&body=Hi ' + escapeHtml(msg.name || '') + ',%0A%0AThank you for reaching out through my portfolio." target="_blank" class="reply-btn"><i class="fas fa-reply"></i> Reply</a>' +
                                 '<button class="delete-btn" onclick="deleteMsg(' + msg.id + ')"><i class="fas fa-trash"></i> Delete</button>' +
                             '</div>';
                         list.appendChild(item);
@@ -547,10 +548,34 @@
                 });
         }
 
+        function refreshMessages() {
+            var btn = document.getElementById('refreshBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            btn.disabled = true;
+            loadMessages();
+            setTimeout(function() {
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+                btn.disabled = false;
+            }, 1000);
+        }
+
         function deleteMsg(id) {
             if (confirm('Delete this message?')) {
-                fetch('/api/delete?id=' + id, { method: 'DELETE' })
-                    .then(function() { loadMessages(); });
+                var el = document.getElementById('msg-' + id);
+                if (el) {
+                    el.style.opacity = '0.5';
+                    el.style.transform = 'translateX(20px)';
+                    el.style.transition = 'all 0.3s';
+                }
+                fetch('/api/delete?id=' + id + '&action=delete')
+                    .then(function(res) { return res.json(); })
+                    .then(function() {
+                        setTimeout(function() { loadMessages(); }, 300);
+                    })
+                    .catch(function() {
+                        if (el) { el.style.opacity = '1'; el.style.transform = 'none'; }
+                        alert('Failed to delete. Try again.');
+                    });
             }
         }
 
