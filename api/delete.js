@@ -11,15 +11,15 @@ module.exports = async (req, res) => {
 
     await initDB();
 
-    if (req.method === 'DELETE' || (req.method === 'GET' && req.query && req.query.id && req.query.action === 'delete')) {
-        try {
-            const id = req.query.id;
-            await pool.query('DELETE FROM messages WHERE id = $1', [parseInt(id)]);
-            return res.status(200).json({ success: true });
-        } catch (err) {
-            return res.status(500).json({ error: err.message });
-        }
+    const id = req.query.id;
+    if (!id) {
+        return res.status(400).json({ error: 'Missing id parameter' });
     }
 
-    return res.status(405).json({ error: 'Method not allowed' });
+    try {
+        await pool.query('DELETE FROM messages WHERE id = $1', [parseInt(id)]);
+        return res.status(200).json({ success: true });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
 };
